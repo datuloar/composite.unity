@@ -1,0 +1,22 @@
+{
+  "name": "com.composite.unity",
+  "version": "0.0.1",
+  "displayName": "COMPOSITE ROOT",
+  "description": "Composite Root - Control the order of game initialization",
+  "unity": "2019.1",
+  "unityRelease": "0b5",
+  "documentationUrl": "https://github.com/datuloar/composite.unity",
+  "licensesUrl": "https://github.com/datuloar/composite.unity/blob/main/LICENSE",
+  "dependencies": {},
+  "author": {
+    "name": "datuloar",
+    "email": "datuloar@mail.ru"
+  },
+  "samples": [
+    {
+      "displayName": "Composite Example",
+      "description": "Simple documentation",
+      "path": "~Example"
+    }
+  ]
+}
