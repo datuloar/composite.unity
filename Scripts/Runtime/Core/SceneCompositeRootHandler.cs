@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEditor;
 using UnityEngine;
 
 namespace composite.unity.Core
@@ -9,8 +10,6 @@ namespace composite.unity.Core
     [DefaultExecutionOrder(-10000)]
     public class SceneCompositeRootHandler : MonoBehaviour
     {
-        [Header("AUTOMATIC FILLING")]
-        [Space(20)]
         [SerializeField] private List<CompositeRootBase> _order;
         [SerializeField] private List<MonoBehaviour> _cachedInjectables;
         [SerializeField] private List<MonoBehaviour> _cachedCommandListeners;
@@ -24,8 +23,7 @@ namespace composite.unity.Core
 
         private void OnValidate()
         {
-            FetchCachedObjects();
-            FetchCompositeRoots();
+            _order.RemoveAll(item => item == null);
         }
 
         private async void Awake()
@@ -112,10 +110,23 @@ namespace composite.unity.Core
                 _localCommandHandler.AddListener(cachedGameObject);
         }
 
+        private void FetchComponents()
+        {
+            FetchCachedObjects();
+            FetchCompositeRoots();
+
+            _order.RemoveAll(item => item == null);
+        }
+
         private void FetchCompositeRoots()
         {
-            _order.Clear();
-            _order = GetComponentsInChildren<CompositeRootBase>().ToList();
+            var fetched = GetComponentsInChildren<CompositeRootBase>().ToList();
+
+            foreach (var child in fetched)
+            {
+               if (!_order.Contains(child))
+                   _order.Add(child);
+            }
         }
 
         private void FetchCachedObjects()
@@ -152,5 +163,24 @@ namespace composite.unity.Core
                 }
             }
         }
+
+#if UNITY_EDITOR
+        [CustomEditor(typeof(SceneCompositeRootHandler))]
+        public class SceneCompositeRootHandlerEditor : Editor
+        {
+            public override void OnInspectorGUI()
+            {
+                DrawDefaultInspector();
+
+                SceneCompositeRootHandler handler = (SceneCompositeRootHandler)target;
+
+                if (GUILayout.Button("OPEN DEPENDENCIES WINDOW"))
+                    CompositeRootEditorWindow.ShowWindow(handler._order);
+
+                if (GUILayout.Button("FETCH COMPONENTS"))
+                    handler.FetchComponents();
+            }
+        }
+#endif
     }
 }
