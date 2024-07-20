@@ -10,16 +10,16 @@ namespace composite.unity.Core
     [DefaultExecutionOrder(-10000)]
     public class SceneCompositeRootHandler : MonoBehaviour
     {
+        private readonly List<ITickable> _tickables = new(256);
+        private readonly List<IFixedTickable> _fixedTickables = new(256);
+        private readonly List<ILateTickable> _lateTickables = new(256);
+
         [SerializeField] private List<CompositeRootBase> _order;
         [SerializeField] private List<MonoBehaviour> _cachedInjectables;
         [SerializeField] private List<MonoBehaviour> _cachedCommandListeners;
 
         private LocalDependencyContainer _localDependencyContainer;
         private LocalCommandHandler _localCommandHandler;
-
-        private List<ITickable> _tickables = new();
-        private List<IFixedTickable> _fixedTickables = new();
-        private List<ILateTickable> _lateTickables = new();
 
         private void OnValidate()
         {
@@ -163,24 +163,5 @@ namespace composite.unity.Core
                 }
             }
         }
-
-#if UNITY_EDITOR
-        [CustomEditor(typeof(SceneCompositeRootHandler))]
-        public class SceneCompositeRootHandlerEditor : Editor
-        {
-            public override void OnInspectorGUI()
-            {
-                DrawDefaultInspector();
-
-                SceneCompositeRootHandler handler = (SceneCompositeRootHandler)target;
-
-                if (GUILayout.Button("OPEN DEPENDENCIES WINDOW"))
-                    CompositeRootEditorWindow.ShowWindow(handler._order);
-
-                if (GUILayout.Button("FETCH COMPONENTS"))
-                    handler.FetchComponents();
-            }
-        }
-#endif
     }
 }

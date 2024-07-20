@@ -1,6 +1,6 @@
 {
   "name": "com.composite.unity",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "displayName": "COMPOSITE ROOT",
   "description": "Composite Root - Control the order of game initialization",
   "unity": "2019.1",
@@ -11,12 +11,5 @@
   "author": {
     "name": "datuloar",
     "email": "datuloar@mail.ru"
-  },
-  "samples": [
-    {
-      "displayName": "Composite Example",
-      "description": "Simple documentation",
-      "path": "~Example"
-    }
-  ]
+  }
 }
